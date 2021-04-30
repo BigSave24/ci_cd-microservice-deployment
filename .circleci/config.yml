@@ -186,7 +186,7 @@ workflows:
       - build-docker-files:
           requires: [setup-environment]
       - lint-testing:
-          requires: [build-docker-file]
+          requires: [build-docker-files]
       - push-container-image:
           requires: [lint-testing]
       - kubernetes-deployment:

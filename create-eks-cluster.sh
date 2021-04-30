@@ -1,0 +1,1 @@
+eksctl create cluster -f iac-eks-cluster.yml --kubeconfig=\Users\$USER\.kube\config

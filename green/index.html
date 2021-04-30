@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Breaking Bad Character Website v1">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Breaking Bad App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+  <section class="hero is-dark is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          Breaking Bad App!
+        </h1>
+        <h2 class="subtitle">
+          Who Will You See Today?
+        </h2>
+      </div>
+      <br>
+      <div class="container">
+        <button style="background-color: green; color: white;" class="button is-large" onClick="window.location.reload();">Go!</button>
+      </div>
+    </div>
+  </section>
+  <body>
+  <section class="section">
+    <div class="container">
+        <div class="content is-medium">
+            <img style="width: 405px; height: 540px;" src="{{ character.image }}" alt="Character Image">
+            <h1>Name:</h1>
+            <h2 style="color: green;">{{ character.name }}</h2>
+            <h1>Occupation:</h1>
+            <!-- For loop logic of jinja template -->
+            {% for job in character.occupation %}
+            <h3 style="color: green;">
+                {{ job }}
+            </h3>
+            {%endfor%}
+
+            <h1>Status:</h1>
+            <h3 style="color: green;">{{ character.status }}</h3>
+            <h1>Nickname:</h1>
+            <h3 style="color: green;">{{ character.nickname }}</h3>
+        </div>
+    </div>
+  </section>
+  </body>
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Breaking Bad App</strong> by <a href="https://kevinedmond.com">Kevin Edmond</a>.
+      </p>
+    </div>
+  </footer>
+</html>

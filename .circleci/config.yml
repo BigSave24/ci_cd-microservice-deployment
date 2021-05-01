@@ -124,24 +124,24 @@ jobs:
       #       - v2-dependencies-{{ checksum "requirements.txt" }}
       #       # fallback to using the latest cache if no exact match is found
       #       - v2-dependencies-
-      - run:
-          name: install aws cli
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" /
-              -o "awscliv2.zip"
-            sudo unzip awscliv2.zip
-            sudo ./aws/install
+      # - run:
+      #     name: install aws cli
+      #     command: |
+      #       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" /
+      #         -o "awscliv2.zip"
+      #       sudo unzip awscliv2.zip
+      #       sudo ./aws/install
       - run:
           name: push image to respository
           command: |
             # docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PWD}
+            # aws ecr get-login-password --region us-east-1 | docker login /
+            #   --username AWS /
+            #   --password-stdin 592339293101.dkr.ecr.us-east-1.amazonaws.com
             docker login -u ${DOCKER_USERNAME} --password-stdin
-            aws ecr get-login-password --region us-east-1 | docker login /
-              --username AWS /
-              --password-stdin 592339293101.dkr.ecr.us-east-1.amazonaws.com
-            docker build -t breakingbad .
-            docker tag breakingbad:latest 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
-            docker push 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
+            docker build -t breakingbad:v1 .
+            docker tag breakingbad:v1 kedmond24/breakingbad:latest
+            docker push kedmond24/breakingbad:latest
 
       # - save_cache:
       #     paths:

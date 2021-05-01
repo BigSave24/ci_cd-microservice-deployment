@@ -124,10 +124,6 @@ jobs:
 
   kubernetes-deployment:
     docker:
-      # Use the same Docker base as the project
-      - image: python:3.8.9-buster
-
-    docker:
       - image: 'cimg/base:stable'
 
       working_directory: ~/repo

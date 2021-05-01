@@ -42,8 +42,6 @@ jobs:
       # Use the same Docker base as the project
       - image: buildpack-deps:trusty
 
-    working_directory: ~/repo
-
     steps:
       - checkout
       # Download and cache dependencies
@@ -73,8 +71,6 @@ jobs:
       # Use the same Docker base as the project
       - image: python:3.8.9-buster
 
-    working_directory: ~/repo
-
     steps:
       - checkout
       # Download and cache dependencies
@@ -100,8 +96,6 @@ jobs:
       # Use the same Docker base as the project
       - image: buildpack-deps:trusty
 
-    working_directory: ~/repo
-
     steps:
       - checkout
       # Download and cache dependencies
@@ -124,9 +118,7 @@ jobs:
 
   kubernetes-deployment:
     docker:
-      - image: 'cimg/base:stable'
-
-      working_directory: ~/repo
+      - image: "cimg/base:stable"
 
     steps:
       - checkout
@@ -164,15 +156,13 @@ jobs:
     # docker:
     #   # Use the same Docker base as the project
     #   - image: python:3.8.9-buster
-    
+
     executor: aws-eks/python3
     parameters:
       cluster-name:
         description: |
           udacity-capstone
         type: string
-
-    working_directory: ~/repo
 
     steps:
       - checkout

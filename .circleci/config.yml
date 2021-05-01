@@ -3,6 +3,14 @@ orbs:
   aws-eks: circleci/aws-eks@1.1.0
   kubernetes: circleci/kubernetes@0.11.2
 
+executors:
+  python:
+    docker:
+      - image: circleci/python:3.8.9-buster
+  aws:
+    docker:
+      - image: amazon/aws-cli
+
 jobs:
   setup-environment:
     docker:
@@ -117,9 +125,7 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
 
   kubernetes-deployment:
-    docker:
-      - image: "cimg/base:stable"
-
+    executor: aws-eks/python3
     steps:
       - checkout
       # Download and cache dependencies

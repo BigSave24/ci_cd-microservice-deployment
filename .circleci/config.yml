@@ -1,4 +1,5 @@
 version: 2.1
+
 orbs:
   aws-eks: circleci/aws-eks@1.1.0
   kubernetes: circleci/kubernetes@0.11.2
@@ -84,9 +85,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
+            - v3-dependencies-{{ checksum "requirements.txt" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
 
       - run:
           name: install dependencies
@@ -104,7 +105,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.breakingbad
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
+          key: v3-dependencies-{{ checksum "requirements.txt" }}
 
   push-container-image:
     # docker:
@@ -121,7 +122,6 @@ jobs:
       #       - v2-dependencies-{{ checksum "requirements.txt" }}
       #       # fallback to using the latest cache if no exact match is found
       #       - v2-dependencies-
-
       - run:
           name: push image to respository
           command: |
@@ -133,10 +133,10 @@ jobs:
             docker tag breakingbad:latest 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
             docker push 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
 
-      - save_cache:
-          paths:
-            - ~/.breakingbad
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
+      # - save_cache:
+      #     paths:
+      #       - ~/.breakingbad
+      #     key: v2-dependencies-{{ checksum "requirements.txt" }}
 
   kubernetes-deployment:
     executor: aws-eks/python3
@@ -147,35 +147,42 @@ jobs:
         type: string
     steps:
       - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-      - kubernetes/install-kubectl
+      # # Download and cache dependencies
+      # - restore_cache:
+      #     keys:
+      #       - v2-dependencies-{{ checksum "requirements.txt" }}
+      #       # fallback to using the latest cache if no exact match is found
+      #       - v2-dependencies-
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+          install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: deployment.yml
-          resource-name: 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad
-          show-kubectl-command: true
+          resource-name: deployment/udacity-capstone
+      # - kubernetes/create-or-update-resource:
+      #     get-rollout-status: true
+      #     resource-file-path: deployment.yml
+      #     resource-name: 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad
+      #     show-kubectl-command: true
 
-      - run:
-          name: setup kubernetes deployment
-          command: |
-            kubectl apply -f deployment.yaml
-            kubectl get deployments
+      # - run:
+      #     name: setup kubernetes deployment
+      #     command: |
+      #       kubectl apply -f deployment.yaml
+      #       kubectl get deployments
 
-      - run:
-          name: set kubernetes service
-          command: |
-            kubectl apply -f service.yaml
-            kubectl get services
+      # - run:
+      #     name: set kubernetes service
+      #     command: |
+      #       kubectl apply -f service.yaml
+      #       kubectl get services
 
-      - save_cache:
-          paths:
-            - ~/.breakingbad
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
+      # - save_cache:
+      #     paths:
+      #       - ~/.breakingbad
+      #     key: v2-dependencies-{{ checksum "requirements.txt" }}
 
   verify-kubernetes-deployments:
     # docker:
@@ -190,14 +197,16 @@ jobs:
         type: string
 
     steps:
-      - checkout
+      # - checkout
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-
+      # - restore_cache:
+      #     keys:
+      #       - v2-dependencies-{{ checksum "requirements.txt" }}
+      #       # fallback to using the latest cache if no exact match is found
+      #       - v2-dependencies-
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
       - run:
           name: install dependencies
           command: |
@@ -217,7 +226,6 @@ workflows:
       # - build-docker-files:
       #     requires: [setup-environment]
       - lint-testing:
-        # requires: [build-docker-files]
       - push-container-image:
           requires: [lint-testing]
       - kubernetes-deployment:

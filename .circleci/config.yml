@@ -225,7 +225,7 @@ workflows:
       # - setup-environment
       # - build-docker-files:
       #     requires: [setup-environment]
-      - lint-testing:
+      - lint-testing
       - push-container-image:
           requires: [lint-testing]
       - kubernetes-deployment:

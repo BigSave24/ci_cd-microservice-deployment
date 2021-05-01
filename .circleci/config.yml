@@ -138,7 +138,7 @@ jobs:
             # aws ecr get-login-password --region us-east-1 | docker login /
             #   --username AWS /
             #   --password-stdin 592339293101.dkr.ecr.us-east-1.amazonaws.com
-            docker login -u ${DOCKER_USERNAME} --password-stdin
+            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PWD}
             docker build -t breakingbad:v1 .
             docker tag breakingbad:v1 kedmond24/breakingbad:latest
             docker push kedmond24/breakingbad:latest

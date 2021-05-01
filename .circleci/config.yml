@@ -12,67 +12,67 @@ executors:
       - image: amazon/aws-cli
 
 jobs:
-  setup-environment:
-    docker:
-      # Use the same Docker base as the project
-      - image: python:3.8.9-buster
+  # setup-environment:
+  #   docker:
+  #     # Use the same Docker base as the project
+  #     - image: python:3.8.9-buster
 
-    working_directory: ~/repo
+  #   working_directory: ~/repo
 
-    steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+  #   steps:
+  #     - checkout
+  #     # Download and cache dependencies
+  #     - restore_cache:
+  #         keys:
+  #           - v1-dependencies-{{ checksum "requirements.txt" }}
+  #           # fallback to using the latest cache if no exact match is found
+  #           - v1-dependencies-
 
-      - run:
-          name: setup virtual environment
-          command: |
-            make setup
-            source ~/.breakingbad/bin/activate
-            make install
+  #     - run:
+  #         name: setup virtual environment
+  #         command: |
+  #           make setup
+  #           source ~/.breakingbad/bin/activate
+  #           make install
 
-      - run:
-          name: install dependencies
-          command: |
-            make install
+  #     - run:
+  #         name: install dependencies
+  #         command: |
+  #           make install
 
-      - save_cache:
-          paths:
-            - ~/.breakingbad
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+  #     - save_cache:
+  #         paths:
+  #           - ~/.breakingbad
+  #         key: v1-dependencies-{{ checksum "requirements.txt" }}
 
-  build-docker-files:
-    docker:
-      # Use the same Docker base as the project
-      - image: circleci/buildpack-deps:trusty
+  # build-docker-files:
+  #   docker:
+  #     # Use the same Docker base as the project
+  #     - image: circleci/buildpack-deps:trusty
 
-    steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+  #   steps:
+  #     - checkout
+  #     # Download and cache dependencies
+  #     - restore_cache:
+  #         keys:
+  #           - v2-dependencies-{{ checksum "requirements.txt" }}
+  #           # fallback to using the latest cache if no exact match is found
+  #           - v2-dependencies-
 
-      - run:
-          name: build out dockerfile
-          command: |
-            docker login -u ${DOCKER_USERNAME} --password-stdin
-            aws ecr get-login-password --region us-east-1 | docker login /
-              --username AWS /
-              --password-stdin 592339293101.dkr.ecr.us-east-1.amazonaws.com
-            docker build -t breakingbad .
-            docker tag breakingbad:latest 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
+  #     - run:
+  #         name: build out dockerfile
+  #         command: |
+  #           docker login -u ${DOCKER_USERNAME} --password-stdin
+  #           aws ecr get-login-password --region us-east-1 | docker login /
+  #             --username AWS /
+  #             --password-stdin 592339293101.dkr.ecr.us-east-1.amazonaws.com
+  #           docker build -t breakingbad .
+  #           docker tag breakingbad:latest 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
 
-      - save_cache:
-          paths:
-            - ~/.breakingbad
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
+  #     - save_cache:
+  #         paths:
+  #           - ~/.breakingbad
+  #         key: v2-dependencies-{{ checksum "requirements.txt" }}
 
   lint-testing:
     docker:
@@ -116,7 +116,12 @@ jobs:
       - run:
           name: push image to respository
           command: |
-            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PWD}
+            docker login -u ${DOCKER_USERNAME} --password-stdin
+            aws ecr get-login-password --region us-east-1 | docker login /
+              --username AWS /
+              --password-stdin 592339293101.dkr.ecr.us-east-1.amazonaws.com
+            docker build -t breakingbad .
+            docker tag breakingbad:latest 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
             docker push 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad:latest
 
       - save_cache:

@@ -207,6 +207,8 @@ workflows:
       - push-container-image:
           requires: [lint-testing]
       - kubernetes-deployment:
+          cluster-name: udacity-capstone
           requires: [push-container-image]
       - verify-kubernetes-deployments:
+          cluster-name: udacity-capstone
           requires: [kubernetes-deployment]

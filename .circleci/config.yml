@@ -157,7 +157,7 @@ jobs:
         type: string
       aws-region:
         description: |
-          ${AWS_REGION}
+          us-east-1
         type: string
     steps:
       - checkout

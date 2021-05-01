@@ -153,7 +153,7 @@ jobs:
     parameters:
       cluster-name:
         description: |
-          udacity-capstone
+          Name of the EKS cluster
         type: string
       aws-region:
         description: |
@@ -170,6 +170,7 @@ jobs:
       - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
+          aws-region: << parameters.aws-region >>
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
@@ -207,7 +208,7 @@ jobs:
     parameters:
       cluster-name:
         description: |
-          udacity-capstone
+          Name of the EKS cluster
         type: string
 
     steps:

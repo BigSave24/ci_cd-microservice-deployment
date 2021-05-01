@@ -88,6 +88,13 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v2-dependencies-
 
+      - run:
+          name: install dependencies
+          command: |
+            make setup
+            source ~/.breakingbad/bin/activate
+            make install
+
       # Run Lint Test
       - run:
           name: run lint
@@ -100,23 +107,25 @@ jobs:
           key: v2-dependencies-{{ checksum "requirements.txt" }}
 
   push-container-image:
-    docker:
-      # Use the same Docker base as the project
-      - image: circleci/buildpack-deps:trusty
+    # docker:
+    #   # Use the same Docker base as the project
+    #   - image: circleci/buildpack-deps:trusty
+    machine: true
+    working_directory: ~/app
 
     steps:
       - checkout
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+      # - restore_cache:
+      #     keys:
+      #       - v2-dependencies-{{ checksum "requirements.txt" }}
+      #       # fallback to using the latest cache if no exact match is found
+      #       - v2-dependencies-
 
       - run:
           name: push image to respository
           command: |
-            docker login -u ${DOCKER_USERNAME} --password-stdin
+            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PWD}
             aws ecr get-login-password --region us-east-1 | docker login /
               --username AWS /
               --password-stdin 592339293101.dkr.ecr.us-east-1.amazonaws.com

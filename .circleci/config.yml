@@ -1,4 +1,8 @@
 version: 2.1
+orbs:
+  aws-eks: circleci/aws-eks@1.1.0
+  kubernetes: circleci/kubernetes@0.11.2
+
 jobs:
   setup-environment:
     docker:
@@ -36,7 +40,7 @@ jobs:
   build-docker-files:
     docker:
       # Use the same Docker base as the project
-      - image: python:3.8.9-buster
+      - image: buildpack-deps:trusty
 
     working_directory: ~/repo
 
@@ -48,18 +52,6 @@ jobs:
             - v1-dependencies-{{ checksum "requirements.txt" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
-      - run:
-          name: install docker engine
-          command: |
-            apt-get update
-            apt install apt-transport-https ca-certificates curl software-properties-common
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-            sudo apt-get update
-            apt-cache policy docker-ce
-            apt-get install docker-ce docker-ce-cli containerd.io
-            systemctl status docker
 
       - run:
           name: build out dockerfile
@@ -106,7 +98,7 @@ jobs:
   push-container-image:
     docker:
       # Use the same Docker base as the project
-      - image: python:3.8.9-buster
+      - image: buildpack-deps:trusty
 
     working_directory: ~/repo
 
@@ -135,7 +127,10 @@ jobs:
       # Use the same Docker base as the project
       - image: python:3.8.9-buster
 
-    working_directory: ~/repo
+    docker:
+      - image: 'cimg/base:stable'
+
+      working_directory: ~/repo
 
     steps:
       - checkout
@@ -145,6 +140,12 @@ jobs:
             - v1-dependencies-{{ checksum "requirements.txt" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      - kubernetes/install-kubectl
+      - kubernetes/create-or-update-resource:
+          get-rollout-status: true
+          resource-file-path: deployment.yml
+          resource-name: 592339293101.dkr.ecr.us-east-1.amazonaws.com/breakingbad
+          show-kubectl-command: true
 
       - run:
           name: setup kubernetes deployment
@@ -164,9 +165,16 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
 
   verify-kubernetes-deployments:
-    docker:
-      # Use the same Docker base as the project
-      - image: python:3.8.9-buster
+    # docker:
+    #   # Use the same Docker base as the project
+    #   - image: python:3.8.9-buster
+    
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          udacity-capstone
+        type: string
 
     working_directory: ~/repo
 

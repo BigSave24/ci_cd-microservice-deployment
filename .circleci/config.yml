@@ -204,11 +204,11 @@ jobs:
 workflows:
   udacity-capstone:
     jobs:
-      - setup-environment
-      - build-docker-files:
-          requires: [setup-environment]
+      # - setup-environment
+      # - build-docker-files:
+      #     requires: [setup-environment]
       - lint-testing:
-          requires: [build-docker-files]
+        # requires: [build-docker-files]
       - push-container-image:
           requires: [lint-testing]
       - kubernetes-deployment:

@@ -261,5 +261,4 @@ workflows:
           requires: [push-container-image]
       - verify-kubernetes-deployments:
           cluster-name: udacity-capstone
-          aws-region: us-east-1
           requires: [kubernetes-deployment]

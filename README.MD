@@ -1,6 +1,6 @@
 [![BigSave24](https://circleci.com/gh/BigSave24/ci_cd-microservice-deployment.svg?style=shield)](https://circleci.com/gh/BigSave24/ci_cd-microservice-deployment)
 
-# machine-learning-microservice-API
+# ci_cd-microservice-deployment
 
 This project will develop a CI/CD pipeline to deploy a microsevice application using a rolling deployment strategy.
 
@@ -28,7 +28,7 @@ This project will develop a CI/CD pipeline to deploy a microsevice application u
 
 ---
 
-## How to Run the Python Scripts and Web App
+## Deploying Microservice using CI/CD Pipeline with Kubernetes
 
 ### Build AWS VPC Environment
 

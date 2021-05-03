@@ -242,8 +242,8 @@ jobs:
       - run:
           name: view cluster details
           command: |
-            kubectl get services && /
-            kubectl get pods && /
+            kubectl get services
+            kubectl get pods
             kubectl get nodes
 
       - save_cache:

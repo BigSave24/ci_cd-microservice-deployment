@@ -182,6 +182,10 @@ jobs:
           get-rollout-status: false
           resource-file-path: deployment.yml
           resource-name: kedmond24/breakingbad
+      - run:
+          name: create service
+          command: |
+            kubectl apply -f service.yml
       # - kubernetes/create-or-update-resource:
       #     get-rollout-status: true
       #     resource-file-path: deployment.yml
@@ -239,10 +243,10 @@ jobs:
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
           aws-region: << parameters.aws-region >>
-      - run:
-          name: create service
-          command: |
-            kubectl apply -f service.yml
+      # - run:
+      #     name: create service
+      #     command: |
+      #       kubectl apply -f service.yml
       - run:
           name: view cluster details
           command: |

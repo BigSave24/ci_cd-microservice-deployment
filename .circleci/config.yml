@@ -229,7 +229,7 @@ jobs:
             - v3-dependencies-{{ checksum "requirements.txt" }}
             # fallback to using the latest cache if no exact match is found
             - v3-dependencies-
-      # - kubernetes/install
+      - kubernetes/install
       - run:
           name: Set AWS Credentials
           command: |

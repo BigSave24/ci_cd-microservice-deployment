@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="description" content="Breaking Bad Character Website v1">
+    <meta name="description" content="Breaking Bad Character Website v2">
     <meta name="keywords" content="HTML, CSS, JavaScript">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Breaking Bad App</title>
@@ -21,7 +21,7 @@
       </div>
       <br>
       <div class="container">
-        <button style="background-color: blue; color: white;" class="button is-large" onClick="window.location.reload();">Go!</button>
+        <button style="background-color: green; color: white;" class="button is-large" onClick="window.location.reload();">Go!</button>
       </div>
     </div>
   </section>
@@ -31,19 +31,19 @@
         <div class="content is-medium">
             <img style="width: 405px; height: 540px;" src="{{ character.image }}" alt="Character Image">
             <h1>Name:</h1>
-            <h2 style="color: blue;">{{ character.name }}</h2>
+            <h2 style="color: green;">{{ character.name }}</h2>
             <h1>Occupation:</h1>
             <!-- For loop logic of jinja template -->
             {% for job in character.occupation %}
-            <h3 style="color: blue;">
+            <h3 style="color: green;">
                 {{ job }}
             </h3>
             {%endfor%}
 
             <h1>Status:</h1>
-            <h3 style="color: blue;">{{ character.status }}</h3>
+            <h3 style="color: green;">{{ character.status }}</h3>
             <h1>Nickname:</h1>
-            <h3 style="color: blue;">{{ character.nickname }}</h3>
+            <h3 style="color: green;">{{ character.nickname }}</h3>
         </div>
     </div>
   </section>

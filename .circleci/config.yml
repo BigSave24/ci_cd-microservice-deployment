@@ -218,7 +218,7 @@ jobs:
         type: string
 
     steps:
-      # - checkout
+      - checkout
       # Download and cache dependencies
       - restore_cache:
           keys:

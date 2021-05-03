@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: breakingbad
-          image: kedmond24/breakingbad
+          image: kedmond24/breakingbad:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80

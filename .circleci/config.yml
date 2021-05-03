@@ -119,11 +119,11 @@ jobs:
     steps:
       - checkout
       # Download and cache dependencies
-      # - restore_cache:
-      #     keys:
-      #       - v2-dependencies-{{ checksum "requirements.txt" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v2-dependencies-
+      - restore_cache:
+          keys:
+            - v3-dependencies-{{ checksum "requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            - v3-dependencies-
       # - run:
       #     name: install aws cli
       #     command: |
@@ -143,10 +143,10 @@ jobs:
             docker tag breakingbad:v1 kedmond24/breakingbad:latest
             docker push kedmond24/breakingbad:latest
 
-      # - save_cache:
-      #     paths:
-      #       - ~/.breakingbad
-      #     key: v2-dependencies-{{ checksum "requirements.txt" }}
+      - save_cache:
+          paths:
+            - ~/.breakingbad
+          key: v3-dependencies-{{ checksum "requirements.txt" }}
 
   kubernetes-deployment:
     executor: aws-eks/python3
@@ -162,11 +162,11 @@ jobs:
     steps:
       - checkout
       # # Download and cache dependencies
-      # - restore_cache:
-      #     keys:
-      #       - v2-dependencies-{{ checksum "requirements.txt" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v2-dependencies-
+      - restore_cache:
+          keys:
+            - v3-dependencies-{{ checksum "requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            - v3-dependencies-
       - kubernetes/install
       - run:
           name: Set AWS Credentials
@@ -200,10 +200,10 @@ jobs:
       #       kubectl apply -f service.yaml
       #       kubectl get services
 
-      # - save_cache:
-      #     paths:
-      #       - ~/.breakingbad
-      #     key: v2-dependencies-{{ checksum "requirements.txt" }}
+      - save_cache:
+          paths:
+            - ~/.breakingbad
+          key: v3-dependencies-{{ checksum "requirements.txt" }}
 
   verify-kubernetes-deployments:
     # docker:
@@ -220,11 +220,11 @@ jobs:
     steps:
       # - checkout
       # Download and cache dependencies
-      # - restore_cache:
-      #     keys:
-      #       - v2-dependencies-{{ checksum "requirements.txt" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v2-dependencies-
+      - restore_cache:
+          keys:
+            - v3-dependencies-{{ checksum "requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            - v3-dependencies-
       - kubernetes/install
       - run:
           name: Set AWS Credentials
@@ -244,7 +244,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.breakingbad
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
+          key: v3-dependencies-{{ checksum "requirements.txt" }}
 
 workflows:
   udacity-capstone:
